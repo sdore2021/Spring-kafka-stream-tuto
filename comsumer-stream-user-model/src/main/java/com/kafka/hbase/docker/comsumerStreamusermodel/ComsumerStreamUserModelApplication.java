@@ -1,15 +1,13 @@
-package com.kafka.hbase.docker.comsumerstream;
-
+package com.kafka.hbase.docker.comsumerStreamusermodel;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ComsumerStreamApplication {
+public class ComsumerStreamUserModelApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ComsumerStreamApplication.class, args);
+		SpringApplication.run(ComsumerStreamUserModelApplication.class, args);
 	}
-	
 
 }
