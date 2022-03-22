@@ -32,7 +32,7 @@ public class KafkaStreamsConfig {
 		config.put(StreamsConfig.APPLICATION_ID_CONFIG, "applicationid" );
 		config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
 		config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-		config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerializer.class); //JSONSerde.class
+		config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName()); //JSONSerde.class
 		config.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000L);
 		
 		//config.put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, JsonTimestampExtractor.class);

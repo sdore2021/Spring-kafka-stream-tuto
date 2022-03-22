@@ -1,22 +1,18 @@
 package com.kafka.hbase.docker.comsumerStreamusermodel;
 
-import java.util.Arrays;
-
-import org.apache.kafka.common.serialization.Deserializer;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
-
 import org.apache.kafka.streams.kstream.KStream;
-
+import org.apache.kafka.streams.kstream.KTable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.JsonNode;
 
 @Component
 public class StreamProcessor {
@@ -26,14 +22,23 @@ public class StreamProcessor {
 		
 		final Serde<String> stringSerde = Serdes.String();
         
-        final Serializer<JsonNode> jsonSerializer = new JsonSerializer();
-        final Deserializer<JsonNode> jsonDeserializer = new JsonDeserializer();
-        final Serde<JsonNode> jsonSerde = Serdes.serdeFrom(jsonSerializer, jsonDeserializer);
+        final Serde<UserModel> userModelSerde = Serdes.serdeFrom(new JsonSerializer<>(), new JsonDeserializer<>(UserModel.class));
 
         
-        KStream<String, JsonNode> streams = builder.stream("dore1", Consumed.with(stringSerde, jsonSerde));
+        KStream<String, UserModel> streams = builder.stream("dore-topic", Consumed.with(stringSerde, userModelSerde));
+        KStream<String, Object> reduit = streams.mapValues(record -> record.getFirstnane());
         
-        System.out.println("received:"+ streams);
+        System.out.println("received from procces:"+ streams);
+        
+        reduit.to("sam-topic-1");
 	}
+	
+	final Serde<UserModel> userModelSerde = Serdes.serdeFrom(new JsonSerializer<>(), new JsonDeserializer<>(UserModel.class));
+	
+	@KafkaListener(topics = {"sam-topic-1"}, groupId = "spring-boot-kafka")
+	public void consume(ConsumerRecord<String, Object> record) {
+		 System.out.println("received kafkalistener = " + record.value().toString() + " key = " + record.key());
+	}
+	
 
 }
